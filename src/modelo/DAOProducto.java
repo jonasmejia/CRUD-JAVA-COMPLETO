@@ -17,6 +17,7 @@ public class DAOProducto {
     Connection con;
     ResultSet rs;
 
+    //Constantes
     private static final String GET_ID_MARCA = "SELECT id_marca as id FROM marca WHERE nombre = ?";
     private static final String GET_ID_CATEGORIA = "SELECT id_categoria as id FROM categoria WHERE nombre = ?";
 
@@ -25,7 +26,7 @@ public class DAOProducto {
         con = oC.getConexion();
     }
 
-    //listar registros
+    //listar productos
     public ArrayList<DTOProducto> listarProductos() throws SQLException {
         ArrayList<DTOProducto> lista = new ArrayList<>();
         DTOProducto producto;
@@ -57,41 +58,37 @@ public class DAOProducto {
         return lista;
     }
 
-    //listar marcas
+    //listar de marcas para el combobox
     public ArrayList<DTOMarca> listaMarca() throws SQLException {
         ArrayList<DTOMarca> lista = new ArrayList<>();
         DTOMarca marca;
 
         try {
-
             String sql = "SELECT nombre FROM marca";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery(sql);
-            
-            
+           
             while (rs.next()) {
                 marca = new DTOMarca();
                 marca.setNombre(rs.getString("nombre").toUpperCase());
                 lista.add(marca);
             }
         } catch (SQLException e) {
-
+            System.out.println("Error: "+e);
         }
         return lista;
     }
 
-    //listar marcas
+    //listar de categorias para el comobobox
     public ArrayList<DTOCategoria> listaCategoria() throws SQLException {
         ArrayList<DTOCategoria> lista = new ArrayList<>();
         DTOCategoria categoria;
 
         try {
-
             String sql = "SELECT nombre FROM categoria";
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery(sql);
-
-            
+  
             while (rs.next()) {
                 categoria = new DTOCategoria();
                 categoria.setNombre(rs.getString("nombre"));
@@ -103,6 +100,7 @@ public class DAOProducto {
         return lista;
     }
 
+    //Capturar el id de categoria y marca
     private int obtenerIdPorNombre(String nombre, String query) throws SQLException {
         try {
             pst = con.prepareStatement(query);
@@ -119,6 +117,7 @@ public class DAOProducto {
         return -1;
     }
 
+    //Validamos que los campos del producto no esten vacios
     public boolean validarProducto(DTOProducto producto, String nombreMarca, String nombreCategoria) {
         // Verificar que los campos obligatorios no estén vacíos
         if (Objects.isNull(producto)
@@ -133,6 +132,7 @@ public class DAOProducto {
         return true;
     }
 
+    //Registrar
     public boolean grabar(DTOProducto producto, String nombreMarca, String nombreCategoria) throws SQLException {
         boolean estado = false;
         if (validarProducto(producto, nombreMarca, nombreCategoria)) {
@@ -164,6 +164,7 @@ public class DAOProducto {
         return estado;
     }
     
+    //Actualizar
     public boolean actualizar(DTOProducto producto, String nombreMarca, String nombreCategoria) throws SQLException {
         boolean estado = false;
         if (validarProducto(producto, nombreMarca, nombreCategoria)) {
@@ -204,6 +205,7 @@ public class DAOProducto {
         return estado;
     }
     
+    //Eliminar
     public boolean eliminar(DTOProducto producto) throws SQLException {
         boolean estado = false;
         try {

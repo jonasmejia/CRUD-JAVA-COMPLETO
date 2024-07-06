@@ -30,6 +30,7 @@ public class CtrlProducto implements ActionListener {
     DefaultComboBoxModel modeloComboM;
     DefaultComboBoxModel modeloComboC;
 
+    //CONSTRUCTOR
     public CtrlProducto(DTOProducto mmod, DAOProducto mdao, FrmProducto frm) {
         this.mod = mmod;
         this.dao = mdao;
@@ -41,6 +42,7 @@ public class CtrlProducto implements ActionListener {
         this.frm.mnEliminar.addActionListener(this);
     }
 
+    //INICIO
     public void inicio() throws SQLException {
         frm.setTitle("Módulo Productos");
         frm.setLocationRelativeTo(null);
@@ -49,6 +51,7 @@ public class CtrlProducto implements ActionListener {
         cargarCategoria();
     }
 
+    //CARGA TABLA PRODUCTO
     public void cargarTabla(JTable tabla) throws SQLException {
         modeloTabla = (DefaultTableModel) tabla.getModel();
 
@@ -77,6 +80,7 @@ public class CtrlProducto implements ActionListener {
         }
     }
 
+    //CARGA COMBO MARCA
     public void cargarMarca() {
         modeloComboM = (DefaultComboBoxModel) frm.cboMarca.getModel();
         ArrayList<DTOMarca> lista = new ArrayList<>();
@@ -89,40 +93,6 @@ public class CtrlProducto implements ActionListener {
             frm.cboMarca.setModel(modeloComboM);
         } catch (Exception e) {
         }
-    }
-
-    public void cargarCategoria() {
-        modeloComboC = (DefaultComboBoxModel) frm.cboCategoria.getModel();
-        ArrayList<DTOCategoria> lista = new ArrayList<>();
-
-        try {
-            lista = dao.listaCategoria();
-            for (int i = 0; i < lista.size(); i++) {
-                modeloComboC.addElement(lista.get(i).getNombre());
-            }
-            frm.cboCategoria.setModel(modeloComboC);
-        } catch (Exception e) {
-        }
-    }
-
-    //CATEGORIA - Selecciona el elemento del combo de acuerdo a la selección de edición
-    public void seleccionaCategoria(String nombre) {
-        //Obtenemos los datos ya cargados del objeto comboCategoria lo asignamos al modelo temporal modeloComboC
-        modeloComboC = (DefaultComboBoxModel) frm.cboCategoria.getModel();
-
-        //Recorremos el modeloTemporal
-        for (int i = 0; i < modeloComboC.getSize(); i++) {
-            //Evaluamos si el valor de esa posición del combo es igual al nombre de la categoria obtenido de la tabla para editar
-            if (modeloComboC.getElementAt(i).equals(nombre)) {
-                //Si coinciden decir al modelo temporal del combo que ese elemento del combo debe ser seleccionado
-                modeloComboC.setSelectedItem(nombre);
-            }
-            //System.out.println("" + modeloComboC.getElementAt(i));
-
-        }
-        //Por ultimo pasamos el combo temporal modeloComboc al combo del formulario cboCategoria
-        frm.cboCategoria.setModel(modeloComboC);
-
     }
 
     //MARCA - Selecciona el elemento del combo de acuerdo a la selección de edición
@@ -144,7 +114,43 @@ public class CtrlProducto implements ActionListener {
         frm.cboMarca.setModel(modeloComboM);
 
     }
+    
+    //CARGA COMBO CATEGORIA
+    public void cargarCategoria() {
+        modeloComboC = (DefaultComboBoxModel) frm.cboCategoria.getModel();
+        ArrayList<DTOCategoria> lista = new ArrayList<>();
 
+        try {
+            lista = dao.listaCategoria();
+            for (int i = 0; i < lista.size(); i++) {
+                modeloComboC.addElement(lista.get(i).getNombre());
+            }
+            frm.cboCategoria.setModel(modeloComboC);
+        } catch (Exception e) {
+        }
+    }
+
+    //SELECCIONA CATEGORIA - Selecciona el elemento del combo de acuerdo a la selección de edición
+    public void seleccionaCategoria(String nombre) {
+        //Obtenemos los datos ya cargados del objeto comboCategoria lo asignamos al modelo temporal modeloComboC
+        modeloComboC = (DefaultComboBoxModel) frm.cboCategoria.getModel();
+
+        //Recorremos el modeloTemporal
+        for (int i = 0; i < modeloComboC.getSize(); i++) {
+            //Evaluamos si el valor de esa posición del combo es igual al nombre de la categoria obtenido de la tabla para editar
+            if (modeloComboC.getElementAt(i).equals(nombre)) {
+                //Si coinciden decir al modelo temporal del combo que ese elemento del combo debe ser seleccionado
+                modeloComboC.setSelectedItem(nombre);
+            }
+            //System.out.println("" + modeloComboC.getElementAt(i));
+
+        }
+        //Por ultimo pasamos el combo temporal modeloComboc al combo del formulario cboCategoria
+        frm.cboCategoria.setModel(modeloComboC);
+
+    }
+
+    //REGISTRAR
     public void metodoRegistrar() {
         String nombre = frm.txtNombre.getText().toUpperCase().trim();
         String descripcion = frm.txtADescripcion.getText().trim();
@@ -179,6 +185,7 @@ public class CtrlProducto implements ActionListener {
         }
     }
 
+    //SELECCIONAR PARA EDITAR
     public void metodoEditar() {
         int fila = frm.tblProducto.getSelectedRow(); // devuelve la posicion de la fila seleccionada cuando hago clic en el jtable
         // si devuelve -1 significa que no dio clic a ningun elemento del jtable
@@ -206,6 +213,7 @@ public class CtrlProducto implements ActionListener {
         }
     }
 
+    //ACTUALIZAR
     public void metodoActualizar() {
 
         String id = frm.txtId.getText().toUpperCase().trim();
@@ -240,6 +248,7 @@ public class CtrlProducto implements ActionListener {
         }
     }
 
+    //ELIMINAR
     public void metodoEliminar() {
         int fila = frm.tblProducto.getSelectedRow(); // devuelve la posicion de la fila seleccionada cuando hago clic en el jtable
         // si devuelve -1 significa que no dio clic a ningun elemento del jtable
@@ -262,6 +271,7 @@ public class CtrlProducto implements ActionListener {
         
     }
 
+    //ACTIONPERFORMED
     @Override
     public void actionPerformed(ActionEvent e) {
         //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -279,6 +289,7 @@ public class CtrlProducto implements ActionListener {
         }
     }
 
+    //LIMPIAR
     public void limpiar() throws SQLException {
         frm.txtId.setText("");
         frm.txtNombre.setText("");
