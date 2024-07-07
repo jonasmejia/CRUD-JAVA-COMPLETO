@@ -47,6 +47,7 @@ public class CtrlProducto implements ActionListener {
         frm.setTitle("Módulo Productos");
         frm.setLocationRelativeTo(null);
         cargarTabla(frm.tblProducto);
+        frm.btnActualizar.setEnabled(false);
         cargarMarca();
         cargarCategoria();
     }
@@ -114,7 +115,7 @@ public class CtrlProducto implements ActionListener {
         frm.cboMarca.setModel(modeloComboM);
 
     }
-    
+
     //CARGA COMBO CATEGORIA
     public void cargarCategoria() {
         modeloComboC = (DefaultComboBoxModel) frm.cboCategoria.getModel();
@@ -208,6 +209,8 @@ public class CtrlProducto implements ActionListener {
             frm.txtStock.setText(stock);
             seleccionaMarca(nombreMarca);
             seleccionaCategoria(nombreCategoria);
+            frm.btnRegistrar.setEnabled(false);
+            frm.btnActualizar.setEnabled(true);
         } else {
             JOptionPane.showMessageDialog(null, "Selecciona un registro de la tabla para editar.");
         }
@@ -253,22 +256,28 @@ public class CtrlProducto implements ActionListener {
         int fila = frm.tblProducto.getSelectedRow(); // devuelve la posicion de la fila seleccionada cuando hago clic en el jtable
         // si devuelve -1 significa que no dio clic a ningun elemento del jtable
         if (fila != -1) {
-            // obtenemos los datos del jtable y los pasamos a variables locales
-            mod.setIdProducto(Integer.parseInt(String.valueOf(frm.tblProducto.getValueAt(fila, 0)))); //devuelve el codigo del jtable
-            try {
-                if (dao.eliminar(mod)) { // la actualizacion se realizó (true)
-                    JOptionPane.showMessageDialog(null, "Registro eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
-                    limpiar();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No se realizó la eliminación", "Eliminado", JOptionPane.ERROR_MESSAGE);
+            //Confirmamos la eliminación
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Deseas ELIMINAR el registro?", "Eliminar", JOptionPane.YES_NO_OPTION);
+
+            if (confirmar == JOptionPane.YES_OPTION) {
+                // obtenemos los datos del jtable y los pasamos a variables locales
+                mod.setIdProducto(Integer.parseInt(String.valueOf(frm.tblProducto.getValueAt(fila, 0)))); //devuelve el codigo del jtable
+
+                try {
+                    if (dao.eliminar(mod)) { // la actualizacion se realizó (true)
+                        JOptionPane.showMessageDialog(null, "Registro eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+                        limpiar();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se realizó la eliminación", "Eliminado", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (SQLException e) {
+                    Logger.getLogger(CtrlMarca.class.getName()).log(Level.SEVERE, null, e);
                 }
-            } catch (SQLException e) {
-                Logger.getLogger(CtrlMarca.class.getName()).log(Level.SEVERE, null, e);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecciona un registro de la tabla para ELIMINAR.");
         }
-        
+
     }
 
     //ACTIONPERFORMED
@@ -299,6 +308,8 @@ public class CtrlProducto implements ActionListener {
         frm.cboMarca.setSelectedIndex(0);
         frm.cboCategoria.setSelectedIndex(0);
         frm.txtNombre.requestFocus();
+        frm.btnRegistrar.setEnabled(true);
+        frm.btnActualizar.setEnabled(false);
 
         modeloTabla.setRowCount(0); // establecer las filas en 0
         cargarTabla(frm.tblProducto);

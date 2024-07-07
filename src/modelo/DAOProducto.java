@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class DAOProducto {
@@ -180,7 +178,7 @@ public class DAOProducto {
                         + "`id_marca` = ?, "
                         + "`id_categoria` = ? "
                         + "WHERE id_producto = ?;"; 
-                System.out.println(sql);
+                
                 pst = con.prepareStatement(sql);
                 pst.setString(1, producto.getNombre());
                 pst.setString(2, producto.getDescripcion());
